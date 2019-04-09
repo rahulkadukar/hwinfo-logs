@@ -1,3 +1,4 @@
 *.log
 crayfile.sh
+data/metadata.json
 node_modules/
