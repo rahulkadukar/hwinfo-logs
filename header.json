@@ -1,0 +1,10 @@
+{
+  "startDate": '2019-04-01',
+  "endDate": '9999-12-31',
+  "sensorData": [
+    {
+      "name": "system",
+      "rows": ['3-9']
+    }
+  ]
+}
