@@ -5,6 +5,6 @@ Hwinfo logs to Grafana
 To generate the header information, run the following command
 
 ```bash
-  node headerFile.js > header.file
+  node headerFile.js > ./data/header.file
   # Manual corrections may be required for comma's
 ```
