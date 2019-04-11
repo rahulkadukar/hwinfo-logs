@@ -40,7 +40,7 @@ function readFile(inputFile) {
 }
 
 function writeHeader(inputData) {
-  const header = inputData[0].split(',')
+  const header = inputData[0].split('|')
   const headerColumns = header.length
 
   for (let x = 0; x < headerColumns; x += 1) {

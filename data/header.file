@@ -95,7 +95,7 @@ Time
 "RING: Running Average Thermal Limit [Yes/No]"
 "RING: VR Thermal Alert [Yes/No]"
 "RING: VR TDC [Yes/No]"
-"RING: Max VR Voltage,ICCmax,PL4 [Yes/No]"
+"RING: Max VR Voltage, ICCmax, PL4 [Yes/No]"
 "RING: Domain-Level PBM PL1 [Yes/No]"
 "RING: Package-Level RAPL/PBM PL1 [Yes/No]"
 "RING: Package-Level RAPL/PBM PL2,PL3 [Yes/No]"

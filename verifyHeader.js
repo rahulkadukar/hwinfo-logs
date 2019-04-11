@@ -5,9 +5,10 @@ const path = require('path')
 const assertCheck = fnData => assert(fnData.errNo === 0, fnData.errMsg)
 const consoleError = msg => console.error('\x1b[31m%s\x1b[0m', msg)
 
-function displayContents(headerData) {
+function displayHeaderContents(headerData) {
   const sensorData = headerData.sensorData
   const totalSensors = sensorData.length
+  let totalCols = 221;
 
   for (let x = 0; x < totalSensors; ++x) {
     let headerLines = sensorData[x].rows
@@ -24,8 +25,17 @@ function displayContents(headerData) {
         allNums.push(parseInt(headerLines[y], 10))
       }
     }
-    console.log(allNums)
+    
+    let printString = ''
+    for (let a = 0; a < allNums.length; ++a) {
+      --totalCols;
+      printString += `${allNums[a]}, `
+    }
+
+    console.log(printString.slice(0, -2))
   }
+
+  console.log(`Return code => ${totalCols}`)
 }
 
 
@@ -35,7 +45,7 @@ function readHeaderFile() {
   outputData.errMsg = ''
   outputData.errNo = 0
 
-  const fileName = path.resolve(__dirname, `data/header.json`)
+  const fileName = path.resolve(__dirname, `data/metadata.json`)
   
   try {
     fileData = readFileSync(path.resolve(__dirname, fileName))
@@ -58,4 +68,4 @@ function readHeaderFile() {
 const fileContents = readHeaderFile()
 assertCheck(fileContents)
 
-const displayHeader = displayContents(fileContents.data)
+displayHeaderContents(fileContents.data)
