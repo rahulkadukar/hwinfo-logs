@@ -27,62 +27,69 @@ function processData(inputData) {
   //console.log(headerData.data.sensorData)
 
   for (let x = 1; x < inputData.length; ++x) {
-    const sensorRecord = {}
-    const rawSensorData = inputData[x].split('|')
+    const sR = {}
+    const rawSD = inputData[x].split('|')
 
-    sensorRecord.date = rawSensorData[0]
-    sensorRecord.time = rawSensorData[1]
-    sensorRecord.tstamp = timeStampFromDateTime(rawSensorData[0], rawSensorData[1])
+    sR.date = rawSD[0]
+    sR.time = rawSD[1]
+    sR.tstamp = timeStampFromDateTime(rawSD[0], rawSD[1])
+
+    // RAM data processing here
+    sR.virtMemUsed = rawSD[2]
+    sR.virtMemAvail = rawSD[3]
+    sR.physMemUsed = rawSD[5]
+    sR.physMemAvail = rawSD[6]
 
     // Disk data processing here
-    sensorRecord.disk0_temp = rawSensorData[123]
-    sensorRecord.disk0_driveFailure = rawSensorData[124]
-    sensorRecord.disk0_driveWarning = rawSensorData[125]
-    sensorRecord.disk0_totalHostWrites = rawSensorData[126]
-    sensorRecord.disk0_totalHostReads = rawSensorData[127]
+    sR.disk0_temp = rawSD[123]
+    sR.disk0_driveFailure = rawSD[124]
+    sR.disk0_driveWarning = rawSD[125]
+    sR.disk0_totalHostWrites = rawSD[126]
+    sR.disk0_totalHostReads = rawSD[127]
 
-    sensorRecord.disk1_temp = rawSensorData[128]
-    sensorRecord.disk1_driveFailure = rawSensorData[129]
-    sensorRecord.disk1_driveWarning = rawSensorData[130]
-    sensorRecord.disk1_totalHostWrites = rawSensorData[131]
-    sensorRecord.disk1_totalHostReads = rawSensorData[132]
+    sR.disk1_temp = rawSD[128]
+    sR.disk1_driveFailure = rawSD[129]
+    sR.disk1_driveWarning = rawSD[130]
+    sR.disk1_totalHostWrites = rawSD[131]
+    sR.disk1_totalHostReads = rawSD[132]
 
-    sensorRecord.disk2_temp = rawSensorData[133]
-    sensorRecord.disk2_driveFailure = rawSensorData[134]
-    sensorRecord.disk2_driveWarning = rawSensorData[135]
-    sensorRecord.disk2_totalHostWrites = rawSensorData[136]
-    sensorRecord.disk2_totalHostReads = rawSensorData[137]
+    sR.disk2_temp = rawSD[133]
+    sR.disk2_driveFailure = rawSD[134]
+    sR.disk2_driveWarning = rawSD[135]
+    sR.disk2_totalHostWrites = rawSD[136]
+    sR.disk2_totalHostReads = rawSD[137]
 
-    sensorRecord.disk3_temp = rawSensorData[138]
-    sensorRecord.disk3_driveFailure = rawSensorData[139]
-    sensorRecord.disk3_driveWarning = rawSensorData[140]
-    sensorRecord.disk3_totalHostWrites = rawSensorData[141]
-    sensorRecord.disk3_totalHostReads = rawSensorData[142]
+    sR.disk3_temp = rawSD[138]
+    sR.disk3_driveFailure = rawSD[139]
+    sR.disk3_driveWarning = rawSD[140]
+    sR.disk3_totalHostWrites = rawSD[141]
+    sR.disk3_totalHostReads = rawSD[142]
 
-    sensorRecord.disk4_temp = rawSensorData[143]
-    sensorRecord.disk4_driveFailure = rawSensorData[144]
-    sensorRecord.disk4_driveWarning = rawSensorData[145]
-    sensorRecord.disk4_totalHostWrites = rawSensorData[146]
-    sensorRecord.disk4_totalHostReads = rawSensorData[147]
+    sR.disk4_temp = rawSD[143]
+    sR.disk4_driveFailure = rawSD[144]
+    sR.disk4_driveWarning = rawSD[145]
+    sR.disk4_totalHostWrites = rawSD[146]
+    sR.disk4_totalHostReads = rawSD[147]
 
-    sensorRecord.disk5_temp = rawSensorData[148]
-    sensorRecord.disk5_driveFailure = rawSensorData[149]
-    sensorRecord.disk5_driveWarning = rawSensorData[150]
-    sensorRecord.disk5_totalHostWrites = rawSensorData[151]
-    sensorRecord.disk5_totalHostReads = rawSensorData[152]
+    sR.disk5_temp = rawSD[148]
+    sR.disk5_driveFailure = rawSD[149]
+    sR.disk5_driveWarning = rawSD[150]
+    sR.disk5_totalHostWrites = rawSD[151]
+    sR.disk5_totalHostReads = rawSD[152]
 
-    outputData.sensorData.push(sensorRecord)
+    outputData.sensorData.push(sR)
   }
 
-  const file = fs.createWriteStream('array.txt');
-  file.on('error', function(err) { /* error handling */ });
+  const workDir = '/home/rahul/code/logs/hwinfo-logs'
+  const outputFile = fs.createWriteStream(path.resolve(workDir, 'array.txt'))
+  outputFile.on('error', function(err) { /* error handling */ });
   outputData.sensorData.forEach(function(v) {
-    let oStr = `${v.tstamp}|${v.disk0_temp}|${v.disk1_temp}|${v.disk2_temp}|`
+    let oStr = `${v.tstamp}|${v.virtMemUsed}|${v.virtMemAvail}|${v.physMemUsed}|${v.physMemAvail}|`
+    oStr += `${v.disk0_temp}|${v.disk1_temp}|${v.disk2_temp}|`
     oStr += `${v.disk3_temp}|${v.disk4_temp}|${v.disk5_temp}\n`
-    file.write(oStr)
+    outputFile.write(oStr)
   })
-  file.end();
-  
+  outputFile.end();
 
   return outputData
 }
@@ -93,8 +100,10 @@ function readFile(inputFile) {
   outputData.errMsg = ''
   outputData.errNo = 0
 
+  const workDir = '/home/rahul/code/logs/hwinfo-logs'
+
   try {
-    fileData = readFileSync(inputFile, 'utf-8')
+    fileData = readFileSync(path.resolve(workDir, inputFile), 'utf-8')
     if (fileData) {
       outputData.data = fileData.split(/\r\n|\r|\n/).filter(r => r.length > 0)
     }
@@ -115,10 +124,11 @@ function readHeaderFile() {
   outputData.errMsg = ''
   outputData.errNo = 0
 
-  const fileName = path.resolve(__dirname, `data/metadata.json`)
+  const workDir = '/home/rahul/code/logs/hwinfo-logs'
+  const fileName = `data/metadata.json`
   
   try {
-    fileData = readFileSync(path.resolve(__dirname, fileName))
+    fileData = readFileSync(path.resolve(workDir, fileName))
 
     if (fileData) {
       outputData.data = JSON.parse(fileData)
@@ -180,5 +190,5 @@ assertCheck(headerData)
 const processedData = processData(fileContents.data)
 assertCheck(processedData)
 
-console.log(processedData.sensorData)
+// console.log(processedData.sensorData)
 
