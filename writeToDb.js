@@ -32,13 +32,17 @@ function processData(inputData) {
     sR.time = rawSD[1]
     sR.tstamp = timeStampFromDateTime(rawSD[0], rawSD[1])
 
-    // RAM data processing here
+    // RAM data
     sR.virtMemUsed = rawSD[2]
     sR.virtMemAvail = rawSD[3]
     sR.physMemUsed = rawSD[5]
     sR.physMemAvail = rawSD[6]
 
-    // Disk data processing here
+    // CPU data 
+    sR.cpu0_temp = rawSD[24]
+    sR.cpu1_temp = rawSD[25]
+
+    // Disk data
     sR.disk0_temp = rawSD[123]
     sR.disk0_driveFailure = rawSD[124]
     sR.disk0_driveWarning = rawSD[125]
@@ -83,6 +87,7 @@ function processData(inputData) {
   outputFile.on('error', function(err) { /* error handling */ });
   outputData.sensorData.forEach(function(v) {
     let oStr = `${v.tstamp}|${v.virtMemUsed}|${v.virtMemAvail}|${v.physMemUsed}|${v.physMemAvail}|`
+    oStr += `${v.cpu0_temp}|${v.cpu1_temp}|`
     oStr += `${v.disk0_temp}|${v.disk1_temp}|${v.disk2_temp}|`
     oStr += `${v.disk3_temp}|${v.disk4_temp}|${v.disk5_temp}\n`
     outputFile.write(oStr)
