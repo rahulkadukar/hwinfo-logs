@@ -1,4 +1,4 @@
 *.log
-crayfile.sh
+*.private
 data/metadata.json
 node_modules/

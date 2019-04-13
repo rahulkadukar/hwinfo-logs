@@ -24,8 +24,6 @@ function processData(inputData) {
   outputData.errNo = 0
   outputData.sensorData = []
 
-  //console.log(headerData.data.sensorData)
-
   for (let x = 1; x < inputData.length; ++x) {
     const sR = {}
     const rawSD = inputData[x].split('|')
@@ -81,7 +79,7 @@ function processData(inputData) {
   }
 
   const workDir = '/home/rahul/code/logs/hwinfo-logs'
-  const outputFile = fs.createWriteStream(path.resolve(workDir, 'array.txt'))
+  const outputFile = fs.createWriteStream(path.resolve(workDir, 'datafile.private'))
   outputFile.on('error', function(err) { /* error handling */ });
   outputData.sensorData.forEach(function(v) {
     let oStr = `${v.tstamp}|${v.virtMemUsed}|${v.virtMemAvail}|${v.physMemUsed}|${v.physMemAvail}|`
