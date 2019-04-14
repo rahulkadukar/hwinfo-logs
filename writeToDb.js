@@ -109,7 +109,7 @@ function processData(inputData) {
     sR.disk5_hostReads = rawSD[152] - prevSD[152]
     sR.disk5_hostWriteMB = rawSD[166] - prevSD[166]
     sR.disk5_hostReadMB = rawSD[165] - prevSD[165]
-    if (x === 244){ console.log(sR) }
+
     outputData.sensorData.push(sR)
   }
 
