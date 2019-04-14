@@ -24,9 +24,10 @@ function processData(inputData) {
   outputData.errNo = 0
   outputData.sensorData = []
 
-  for (let x = 1; x < inputData.length; ++x) {
+  for (let x = 2; x < inputData.length; ++x) {
     const sR = {}
     const rawSD = inputData[x].split('|')
+    const prevSD = inputData[x - 1].split('|')
 
     sR.date = rawSD[0]
     sR.time = rawSD[1]
@@ -49,11 +50,21 @@ function processData(inputData) {
     sR.disk0_totalHostWrites = rawSD[126]
     sR.disk0_totalHostReads = rawSD[127]
 
+    sR.disk0_hostWrites = rawSD[126] - prevSD[126]
+    sR.disk0_hostReads = rawSD[127] - prevSD[127]
+    sR.disk0_hostWriteMB = rawSD[180] - prevSD[180]
+    sR.disk0_hostReadMB = rawSD[179] - prevSD[179]
+
     sR.disk1_temp = rawSD[128]
     sR.disk1_driveFailure = rawSD[129]
     sR.disk1_driveWarning = rawSD[130]
     sR.disk1_totalHostWrites = rawSD[131]
     sR.disk1_totalHostReads = rawSD[132]
+
+    sR.disk1_hostWrites = rawSD[131] - prevSD[131]
+    sR.disk1_hostReads = rawSD[132] - prevSD[132]
+    sR.disk1_hostWriteMB = rawSD[187] - prevSD[187]
+    sR.disk1_hostReadMB = rawSD[186] - prevSD[186]
 
     sR.disk2_temp = rawSD[133]
     sR.disk2_driveFailure = rawSD[134]
@@ -61,11 +72,21 @@ function processData(inputData) {
     sR.disk2_totalHostWrites = rawSD[136]
     sR.disk2_totalHostReads = rawSD[137]
 
+    sR.disk2_hostWrites = rawSD[136] - prevSD[136]
+    sR.disk2_hostReads = rawSD[137] - prevSD[137]
+    sR.disk2_hostWriteMB = rawSD[194] - prevSD[194]
+    sR.disk2_hostReadMB = rawSD[193] - prevSD[193]
+
     sR.disk3_temp = rawSD[138]
     sR.disk3_driveFailure = rawSD[139]
     sR.disk3_driveWarning = rawSD[140]
     sR.disk3_totalHostWrites = rawSD[141]
     sR.disk3_totalHostReads = rawSD[142]
+
+    sR.disk3_hostWrites = rawSD[141] - prevSD[141]
+    sR.disk3_hostReads = rawSD[142] - prevSD[142]
+    sR.disk3_hostWriteMB = rawSD[201] - prevSD[201]
+    sR.disk3_hostReadMB = rawSD[200] - prevSD[200]
 
     sR.disk4_temp = rawSD[143]
     sR.disk4_driveFailure = rawSD[144]
@@ -73,12 +94,22 @@ function processData(inputData) {
     sR.disk4_totalHostWrites = rawSD[146]
     sR.disk4_totalHostReads = rawSD[147]
 
+    sR.disk4_hostWrites = rawSD[146] - prevSD[146]
+    sR.disk4_hostReads = rawSD[147] - prevSD[147]
+    sR.disk4_hostWriteMB = rawSD[208] - prevSD[208]
+    sR.disk4_hostReadMB = rawSD[207] - prevSD[207]
+
     sR.disk5_temp = rawSD[148]
     sR.disk5_driveFailure = rawSD[149]
     sR.disk5_driveWarning = rawSD[150]
     sR.disk5_totalHostWrites = rawSD[151]
     sR.disk5_totalHostReads = rawSD[152]
 
+    sR.disk5_hostWrites = rawSD[151] - prevSD[151]
+    sR.disk5_hostReads = rawSD[152] - prevSD[152]
+    sR.disk5_hostWriteMB = rawSD[166] - prevSD[166]
+    sR.disk5_hostReadMB = rawSD[165] - prevSD[165]
+    if (x === 244){ console.log(sR) }
     outputData.sensorData.push(sR)
   }
 
@@ -89,7 +120,13 @@ function processData(inputData) {
     let oStr = `${v.tstamp}|${v.virtMemUsed}|${v.virtMemAvail}|${v.physMemUsed}|${v.physMemAvail}|`
     oStr += `${v.cpu0_temp}|${v.cpu1_temp}|`
     oStr += `${v.disk0_temp}|${v.disk1_temp}|${v.disk2_temp}|`
-    oStr += `${v.disk3_temp}|${v.disk4_temp}|${v.disk5_temp}\n`
+    oStr += `${v.disk3_temp}|${v.disk4_temp}|${v.disk5_temp}|`
+    oStr += `${v.disk0_hostReads}|${v.disk0_hostWrites}|${v.disk1_hostReads}|${v.disk1_hostWrites}|`
+    oStr += `${v.disk2_hostReads}|${v.disk2_hostWrites}|${v.disk3_hostReads}|${v.disk3_hostWrites}|`
+    oStr += `${v.disk4_hostReads}|${v.disk4_hostWrites}|${v.disk5_hostReads}|${v.disk5_hostWrites}|`
+    oStr += `${v.disk0_hostReadMB}|${v.disk0_hostWriteMB}|${v.disk1_hostReadMB}|${v.disk1_hostWriteMB}|`
+    oStr += `${v.disk2_hostReadMB}|${v.disk2_hostWriteMB}|${v.disk3_hostReadMB}|${v.disk3_hostWriteMB}|`
+    oStr += `${v.disk4_hostReadMB}|${v.disk4_hostWriteMB}|${v.disk5_hostReadMB}|${v.disk5_hostWriteMB}\n`
     outputFile.write(oStr)
   })
   outputFile.end();
